@@ -8,27 +8,33 @@ interface MovieModalProps {
   onClose: () => void;
 }
 
-const modalRoot = document.querySelector('#modal-root') as HTMLElement;
+const modalRoot = document.getElementById('modal-root')!;
 
 const MovieModal = ({ movie, onClose }: MovieModalProps) => {
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
     };
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).classList.contains(styles.backdrop)) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    window.addEventListener('click', handleClickOutside);
+
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('click', handleClickOutside);
     };
   }, [onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) onClose();
-  };
-
   return createPortal(
-    <div className={styles.backdrop} onClick={handleBackdropClick} role="dialog" aria-modal="true">
+    <div className={styles.backdrop} role="dialog" aria-modal="true">
       <div className={styles.modal}>
         <button className={styles.closeButton} aria-label="Close modal" onClick={onClose}>
           &times;

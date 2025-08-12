@@ -7,13 +7,11 @@ interface MovieGridProps {
 }
 
 const MovieGrid = ({ movies, onSelect }: MovieGridProps) => {
-  if (!movies.length) return null;
-
   return (
     <ul className={styles.grid}>
       {movies.map((movie) => (
-        <li key={movie.id} onClick={() => onSelect(movie)}>
-          <div className={styles.card}>
+        <li key={movie.id}>
+          <div className={styles.card} onClick={() => onSelect(movie)}>
             <img
               className={styles.image}
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

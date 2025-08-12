@@ -8,17 +8,29 @@ const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
 interface FetchMoviesResponse {
   results: Movie[];
+  total_pages: number;
 }
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
-  const response: AxiosResponse<FetchMoviesResponse> = await axios.get(`${BASE_URL}${SEARCH_ENDPOINT}`, {
-    params: {
-      query,
-    },
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
+export const fetchMovies = async (
+  query: string,
+  page: number,
+  language: string = 'uk-UA' // або 'en-US', залежно від потреб
+): Promise<FetchMoviesResponse> => {
+  try {
+    const response: AxiosResponse<FetchMoviesResponse> = await axios.get(`${BASE_URL}${SEARCH_ENDPOINT}`, {
+      params: {
+        query,
+        page,
+        language,
+      },
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
 
-  return response.data.results;
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error fetching movies:', error);
+    throw error;
+  }
 };
