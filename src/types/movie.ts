@@ -5,4 +5,5 @@ export interface Movie {
   overview: string;
   backdrop_path: string;
   release_date: string;
+  vote_average: number; // ✅ додано
 }
